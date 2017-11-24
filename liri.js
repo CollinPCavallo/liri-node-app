@@ -22,38 +22,64 @@ function myTweets() {
         })
     })
 }
-function spotifySong (song) {
-    if (song === " "){
+
+function spotifySong(song) {
+    if (song === " ") {
         song === "The Sign Ace of Base"
     }
     var spotifySearch = new Spotify(keys.spotifyKeys);
     console.log('spotify');
     spotifySearch.search({
-        type: 'track',
-        query: song,
-        limit: 1
-    },
-    function(err, data) {
-    if (err) {
-        console.log(error)
+            type: 'track',
+            query: song,
+            limit: 1
+        },
+        function (err, data) {
+            if (err) {
+                console.log(error)
+            }
+            console.log("worked")
+            console.log(data.tracks.items[0].album.artists[0].name);
+            console.log(data.tracks.items[0].album.name);
+            console.log(data.tracks.items[0].name);
+            console.log(data.tracks.items[0].preview_url);
+
+        })
+}
+
+function movieInfo() {
+    var url = "http://www.omdbapi.com/?apikey=40e9cece";
+    var movie = input2
+    if (movie === "") {
+        url += "&t=Mr+Nobody&type=movie"
+    } else {
+        url += "&t=" + movie;
     }
-    console.log("worked")
-    console.log(data.tracks.items[0].album.artists[0].name);
-    console.log(data.tracks.items[0].album.name);
-    console.log(data.tracks.items[0].name);
-    console.log(data.tracks.items[0].preview_url);
+    request(url, function (error, response, body) {
+        // console.log("this worked")
+        if (error) {
+            console.log(error)
+        }
+        if (response.statusCode === 200) {
+
+        var infoJson = JSON.parse(body)
+        console.log(infoJson.Title);
+        console.log(infoJson.Year);
+        console.log(infoJson.Country);
+        console.log(infoJson.Plot);
+        console.log(infoJson.Actors);
+        }
 
     })
 }
-function movieInfo(){
 
-}
-function readRandom(){
-    fs.readFile("random.txt", "utf8", function(error, data){
-        if (error){
+function readRandom() {
+    fs.readFile("random.txt", "utf8", function (error, data) {
+        if (error) {
             console.log(error)
         }
         console.log(data);
+
     })
 }
 
