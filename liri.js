@@ -63,11 +63,11 @@ function movieInfo() {
         if (response.statusCode === 200) {
 
         var infoJson = JSON.parse(body)
-        console.log(infoJson.Title);
-        console.log(infoJson.Year);
-        console.log(infoJson.Country);
-        console.log(infoJson.Plot);
-        console.log(infoJson.Actors);
+        console.log("This movie Title is: " + infoJson.Title);
+        console.log("This movie was made in the year: " + infoJson.Year);
+        console.log("This movie was made in: " + infoJson.Country);
+        console.log("The plot of this movie is: " + infoJson.Plot);
+        console.log("The actors in this movie are: " + infoJson.Actors);
         }
 
     })
@@ -78,7 +78,12 @@ function readRandom() {
         if (error) {
             console.log(error)
         }
-        console.log(data);
+        
+        var split = data.split(",")
+        // console.log(split[1]);
+        action = split[0];
+        randomMovie = split[1];
+        cmdListen(action, randomMovie);
 
     })
 }
