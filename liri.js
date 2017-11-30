@@ -5,13 +5,12 @@ var Twitter = require("twitter")
 var Spotify = require("node-spotify-api")
 var input = process.argv;
 var input1 = input[2];
-var input2 = input[3];
+var input2 = "";
 
 
 
 function myTweets() {
     var client = new Twitter(keys.twitterKeys);
-    console.log('tweets');
     client.get("statuses/user_timeline", function (error, tweets, response) {
         if (error) {
             console.log(error);
@@ -24,53 +23,55 @@ function myTweets() {
 }
 
 function spotifySong(song) {
-    if (song === " ") {
-        song === "The Sign Ace of Base"
+    if (song === '') {
+        song = "The Sign Ace of Base"
     }
     var spotifySearch = new Spotify(keys.spotifyKeys);
-    console.log('spotify');
-    spotifySearch.search({
-            type: 'track',
-            query: song,
-            limit: 1
-        },
-        function (err, data) {
-            if (err) {
-                console.log(error)
-            }
-            console.log("worked")
-            console.log(data.tracks.items[0].album.artists[0].name);
-            console.log(data.tracks.items[0].album.name);
-            console.log(data.tracks.items[0].name);
-            console.log(data.tracks.items[0].preview_url);
 
-        })
+    spotifySearch.search({
+        type: 'track',
+        query: song
+    }, function (err, data) {
+        if (!err) {
+            console.log("Name: " + data.tracks.items[0].name);
+            console.log("Album: " + data.tracks.items[0].album.name);
+            console.log("Artist: " + data.tracks.items[0].album.artists[0].name);
+            console.log("Preview: " + data.tracks.items[0].preview_url);
+        } else {
+            return console.log(err)
+        }
+    })
 }
 
+
+
 function movieInfo() {
-    var url = "http://www.omdbapi.com/?apikey=40e9cece";
-    var movie = input2
-    if (movie === "") {
-        url += "&t=Mr+Nobody&type=movie"
-    } else {
-        url += "&t=" + movie;
+    for (var i = 3; i < process.argv.length; i++) {
+        if (input2 === "") {
+            input2 = input2 + process.argv[i];
+        } else {
+            input2 = input2 + " " + process.argv[i]
+        }
     }
+    if (input2 === "") {
+        input2 = "Mr. Nobody"
+    }
+    var url = "http://www.omdbapi.com/?t=" + input2 + "&apikey=40e9cece";
     request(url, function (error, response, body) {
-        // console.log("this worked")
         if (error) {
             console.log(error)
         }
         if (response.statusCode === 200) {
+            var infoJson = JSON.parse(body)
+            console.log("This movie Title is: " + infoJson.Title);
+            console.log("This movie was made in the year: " + infoJson.Year);
+            console.log("This movie was made in: " + infoJson.Country);
+            console.log("The plot of this movie is: " + infoJson.Plot);
+            console.log("The actors in this movie are: " + infoJson.Actors);
 
-        var infoJson = JSON.parse(body)
-        console.log("This movie Title is: " + infoJson.Title);
-        console.log("This movie was made in the year: " + infoJson.Year);
-        console.log("This movie was made in: " + infoJson.Country);
-        console.log("The plot of this movie is: " + infoJson.Plot);
-        console.log("The actors in this movie are: " + infoJson.Actors);
         }
-
     })
+
 }
 
 function readRandom() {
@@ -78,9 +79,8 @@ function readRandom() {
         if (error) {
             console.log(error)
         }
-        
+
         var split = data.split(",")
-        // console.log(split[1]);
         action = split[0];
         randomMovie = split[1];
         cmdListen(action, randomMovie);
@@ -89,12 +89,24 @@ function readRandom() {
 }
 
 function cmdListen(request, userInput) {
+    console.log("Please enter one of the following" +
+        "\n my-tweets" +
+        "\n spotify-this-song" +
+        "\n movie-this" +
+        "\n do-what-it-says");
     switch (request) {
         case "my-tweets":
             myTweets();
             break;
         case "spotify-this-song":
-            spotifySong(userInput);
+            for (var i = 3; i < process.argv.length; i++) {
+                if (input2 === '') {
+                    input2 = input2 + process.argv[i];
+                } else {
+                    input2 = input2 + ' ' + process.argv[i];
+                }
+            }
+            spotifySong(input2);
             break;
         case "movie-this":
             movieInfo(userInput);

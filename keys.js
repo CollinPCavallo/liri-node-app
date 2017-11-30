@@ -10,7 +10,6 @@ var spotifyKeys = {
     id: '945126bd61b54bfb8eee4cd2e737acbf',
     secret: 'd43aec91e32346078de9efb8f9191b44'
 }
-
 module.exports = {
     twitterKeys:twitterKeys,
     spotifyKeys:spotifyKeys
